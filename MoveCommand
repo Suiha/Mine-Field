@@ -1,0 +1,8 @@
+package minefield;
+
+import mvc.*;
+
+public class MoveCommand extends Command
+{
+
+}
