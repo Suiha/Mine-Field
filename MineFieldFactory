@@ -1,0 +1,43 @@
+package minefield;
+
+import mvc.*;
+
+public class MineFieldFactory implements AppFactory
+{
+	  public Model makeModel()
+	  {
+		  return new MineField();
+	  }
+    
+    public View makeView(Model m)
+    {
+    	return new MineFieldView((MineField)m);
+    }
+
+    public String[] getEditCommands()
+    {
+    	// add commands later
+    	return null;
+    }
+
+    public Command makeEditCommand(Model model, String type)
+    {
+    	// if statements
+    	return null;
+    }
+
+    public String getTitle()
+    {
+    	return "Mine Field Team 9, 2021";
+    }
+
+    public String[] getHelp()
+    {
+    	return new String[] {"Navigate to the exit (bottom right) while avoiding mines."}
+    }
+
+    public String about()
+    {
+    	return "Mine Field Version 2.0. Copyright by Team 9 (Veronica Hu, Matthew Maksim).";
+    }
+}
