@@ -1,7 +1,7 @@
 package mvc;
 
-public class AppFactory {
-  public Model makeModel();
+  public class AppFactory {
+        public Model makeModel();
 	public View makeView(Model model);
 	public String[] getEditCommands();
 	public Command makeEditCommand(Model model, String type);
