@@ -1,0 +1,12 @@
+package minefield;
+
+import mvc.*;
+
+public class MineFieldView extends View 
+{
+	public MineFieldView(MineField m)
+	{
+		super(m);
+	}
+
+}
