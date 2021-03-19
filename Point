@@ -1,0 +1,28 @@
+package minefield;
+
+import java.io.*;
+import java.awt.*;
+
+// Helper class to keep track of where on the MineField the player is
+public class Point implements Serializable
+{
+	  private int i;
+	  private int j;
+  	private boolean mine;
+	
+	public Point(int x, int y)
+	{
+		  this.i = x;
+      this.j = y;
+      mine = false;
+	}
+	
+	public int getRow() 			{ return this.i; }
+	public void setRow(int num) 	{ this.i = num; }
+	
+	public int getColumn() 			{ return this.j; }
+	public void setColumn(int num) 	{ this.j = num; }
+	
+	public boolean isMine() 		{ return mine; }
+	public void setMine(boolean b)	{ mine = b; }
+}
