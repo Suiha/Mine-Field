@@ -6,6 +6,11 @@ public class MineFieldPanel extends AppPanel
 {
 	public MineFieldPanel(AppFactory factory) {
     	super(factory);
+	GridLayout experimentLayout = new GridLayout(0,2);
+    	controlPanel.setLayout(experimentLayout);
+        setLayout((new GridLayout(0, 2)));
+        add(controlPanel);
+        add(view);
     	
         controlPanel.setBackground(Color.lightGray);
         view.setBackground(Color.WHITE);
