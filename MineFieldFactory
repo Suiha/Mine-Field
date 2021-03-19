@@ -16,13 +16,35 @@ public class MineFieldFactory implements AppFactory
 
     public String[] getEditCommands()
     {
-    	// add commands later
-    	return null;
+    	return new String[] {"NW", "N", "NE", "W", "E","SW","S", "SE" };
     }
 
     public Command makeEditCommand(Model model, String type)
     {
-    	// if statements
+    	if (type == "NW") {
+		return new MoveCommand(model);
+	}
+	if (type == "N") {
+		return new MoveCommand(model);
+	}
+	if (type == "NE") {
+		return new MoveCommand(model);
+	}
+	if (type == "W") {
+		return new MoveCommand(model);
+	}
+	if (type == "E") {
+		return new MoveCommand(model);
+	}
+	if (type == "SW") {
+		return new MoveCommand(model);
+	}
+	if (type == "S") {
+		return new MoveCommand(model);
+	}
+	if (type == "SE") {
+		return new MoveCommand(model);
+	}
     	return null;
     }
 
