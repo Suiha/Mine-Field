@@ -4,5 +4,49 @@ import mvc.*;
 
 public class MineFieldPanel extends AppPanel 
 {
-	
+	public MineFieldPanel(AppFactory factory) {
+    	super(factory);
+    	
+        controlPanel.setBackground(Color.lightGray);
+        view.setBackground(Color.WHITE);
+        
+        JButton NW = new JButton("NW");
+        NW.addActionListener(this);
+        controlPanel.add(NW);
+
+        JButton N = new JButton("N");
+        N.addActionListener(this);
+        controlPanel.add(N);
+        
+        JButton NE = new JButton("NE");
+        NE.addActionListener(this);
+        controlPanel.add(NE);
+        
+        JButton W = new JButton("W");
+        W.addActionListener(this);
+        controlPanel.add(W);
+        
+        JButton E = new JButton("E");
+        E.addActionListener(this);
+        controlPanel.add(E);
+        
+        JButton SW = new JButton("SW");
+        SW.addActionListener(this);
+        controlPanel.add(SW);
+        
+        JButton S = new JButton("S");
+        S.addActionListener(this);
+        controlPanel.add(S);
+        
+        JButton SE = new JButton("SE");
+        SE.addActionListener(this);
+        controlPanel.add(SE);
+        
+    }
+        
+public static void main(String[] args) {
+        AppFactory factory = (AppFactory) new MineFieldFactory();
+        AppPanel panel = new MineFieldPanel(factory);
+        panel.display();
+    }
 }
