@@ -1,12 +1,58 @@
 package minefield;
 
 import mvc.*;
+import java.util.*;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+
+import javax.swing.*;
 
 public class MineFieldView extends View 
 {
+	private JLabel[][] cells;
+	
 	public MineFieldView(MineField m)
 	{
 		super(m);
+		
+		int dim = m.getDim();
+		cells = new JLabel[dim][dim];
+		setLayout(new GridLayout(dim, dim));
+		
+		Point[][] field = m.getField();
+		ArrayList<Point> path = m.getPath();
+		
+		for (int row = 0; row < dim; row++)
+		{
+			for (int col = 0; col < dim; col++)
+			{
+				cells[row][col] = new JLabel();
+				cells[row][col].setText("?");
+				//cells[row][col].patch = m.getPatch(row, col);
+				cells[row][col].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				
+				// If player has visited this Point
+				if (path.contains(field[row][col]))
+				{
+					cells[row][col].setBackground(Color.RED);
+					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.WHITE));
+					cells[row][col].setText("" + m.getMineNeighbors());
+				}
+				
+				if (path.contains(field[dim - 1][dim - 1]))
+				{
+					cells[row][col].setBackground(Color.WHITE);
+					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.GREEN));
+				}
+				
+				this.add(cells[row][col]);
+			}
+		}
 	}
 
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) 
+	{
+    	
+    	}
 }
