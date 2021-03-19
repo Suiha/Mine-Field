@@ -14,7 +14,13 @@ public class MineFieldView extends View
 	public MineFieldView(MineField m)
 	{
 		super(m);
-		
+		model.addPropertyChangeListener(this);
+	}
+
+	@Override
+   	public void propertyChange(PropertyChangeEvent arg0) 
+	{
+		MineField m = (MineField) this.model;
 		int dim = m.getDim();
 		cells = new JLabel[dim][dim];
 		setLayout(new GridLayout(dim, dim));
@@ -48,11 +54,6 @@ public class MineFieldView extends View
 				this.add(cells[row][col]);
 			}
 		}
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent arg0) 
-	{
-    	
-    	}
+    }
 }
+
