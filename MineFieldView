@@ -15,12 +15,13 @@ public class MineFieldView extends View
 	{
 		super(m);
 		model.addPropertyChangeListener(this);
+		m.change(new Point(10, 10), true);
 	}
 
 	@Override
-   	public void propertyChange(PropertyChangeEvent arg0) 
+    	public void propertyChange(PropertyChangeEvent arg0) 
 	{
-		MineField m = (MineField) this.model;
+		MineField m = (MineField) model;
 		int dim = m.getDim();
 		cells = new JLabel[dim][dim];
 		setLayout(new GridLayout(dim, dim));
@@ -45,10 +46,22 @@ public class MineFieldView extends View
 					cells[row][col].setText("" + m.getMineNeighbors());
 				}
 				
+				// If the player set off a mine
+				if (path.contains(field[row][col]) && field[row][col].isMine())
+				{
+					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.RED));
+					cells[row][col].setText("!");
+					Utilities.inform("Uh oh! You've set off a mine!"
+							+ "\n Please try again. Go to File > New to start a new game.");
+				}
+				
+				// If the player has reached the goal
 				if (path.contains(field[dim - 1][dim - 1]))
 				{
 					cells[row][col].setBackground(Color.WHITE);
 					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.GREEN));
+					Utilities.inform("Congratulations! You've won!"
+							+ "\nGo to File > New to start a new game.");
 				}
 				
 				this.add(cells[row][col]);
