@@ -1,11 +1,137 @@
 package minefield;
 
 import mvc.*;
+import java.util.*;
+import java.awt.*;
+import javax.swing.*;
 
 public class MineField extends Model 
 {
+	public static int DIMENSION = 20;
+	public static int percentMined = 5;
+	
+	private Point[][] field;
+	private Point location;
+	private ArrayList<Point> path;
+	
 	public MineField()
 	{
 		super();
+		
+		// Initializing the field and calculating the number of mines
+		field = new Point[DIMENSION][DIMENSION];						// Create a field of Points to keep track of which locations are mines
+		double mines = DIMENSION * DIMENSION;							// Calculate how many Points there are on the field
+		mines /= 100;
+		mines *= percentMined;											// Calculate how many total mines there are on the map based on percentMined
+		System.out.println("Total Mines: " + mines);
+		
+		// Randomly determining the placement of mines and initializing each Point
+		for (int i = 0; i < DIMENSION; i++)
+		{
+			for (int j = 0; j < DIMENSION; j++)
+			{
+				field[i][j] = new Point(i, j);
+				double random = Math.random();
+				
+				// Consider making formula for random
+				if (mines >= 1 && random < 0.07)						// 0.07: number low enough to spread out mines but high enough so that all mines are places
+				{
+					field[i][j].setMine(true);
+					mines--;
+				}
+			}
+		}
+		System.out.println("Mines leftover: " + mines);
+		
+		// The first and last Points are always not mines
+		field[0][0].setMine(false);
+		field[DIMENSION - 1][DIMENSION - 1].setMine(false);
+		
+		// Start a list of Points the player has visited, including the starting location (0, 0)
+		path = new ArrayList<>();
+		location = field[0][0];
+		path.add(location);
+	}
+	
+	public int getDim() 				{ return DIMENSION; }
+	
+	public Point[][] getField() 		{ return field; }
+	
+	public Point getLocation() 			{ return location; }
+	public void setLocation(Point p) 	{ location = p; }
+	
+	public ArrayList<Point> getPath() 	{ return path; }
+	
+	
+	/**
+	 * Calculates how many Points with mines are immediately next to the current location.
+	 * @return: number of Points around the current location with mines
+	 */
+	public int getMineNeighbors()
+	{
+		int count = 0;
+		int i = location.getRow();
+		int j = location.getColumn();
+		
+		// Calculating coordinates around the current location
+		int up 		= i - 1;
+		int down 	= j + 1;
+		int left 	= j - 1;
+		int right 	= j + 1;
+		
+		// Adjusting for neighbors past the edges of the field
+		if (up < 0) 				{ up = 0; }
+		if (down > DIMENSION - 1) 	{ down = DIMENSION - 1; }
+		if (left < 0) 				{ left = 0; }
+		if (right > DIMENSION - 1) 	{ right = DIMENSION - 1;}
+		
+		// Compile a list of neighbors
+		Point N 	= field[up][j];
+		Point NW 	= field[up][left];
+		Point NE 	= field[up][right];
+		Point W 	= field[i][left];
+		Point E 	= field[i][right];
+		Point S 	= field[down][j];
+		Point SW 	= field[down][left];
+		Point SE 	= field[down][right];
+		
+		// Add all neighbors to a Set to account for doubles (due to the adjustments made earlier)
+		Set<Point> neighbors = new HashSet<Point>();
+		neighbors.add(N);
+		neighbors.add(NW);
+		neighbors.add(NE);
+		neighbors.add(W);
+		neighbors.add(E);
+		neighbors.add(S);
+		neighbors.add(SW);
+		neighbors.add(SE);
+		
+		// Check each neighbor to see if it is a mine; count the number of neighboring mines
+		for (Point n : neighbors)
+		{
+			if (n.isMine())
+			{
+				count++;
+			}
+		}
+		
+		return count;
+	}
+	
+	// Test code
+	public static void main(String[] args)
+	{
+		MineField m = new MineField();
+		for (int i = 0; i < DIMENSION - 1; i++)
+		{
+			for (int j = 0; j < DIMENSION - 1; j++)
+			{
+				int a = 0;
+				if (m.getField()[i][j].isMine()) { a = 1; }
+				System.out.print(a + " ");
+			}
+			System.out.println();
+		}
+		System.out.println("Neighbors with mines: " + m.getMineNeighbors());
 	}
 }
