@@ -23,7 +23,6 @@ public class MineField extends Model
 		double mines = DIMENSION * DIMENSION;							// Calculate how many Points there are on the field
 		mines /= 100;
 		mines *= percentMined;											// Calculate how many total mines there are on the map based on percentMined
-		System.out.println("Total Mines: " + mines);
 		
 		// Randomly determining the placement of mines and initializing each Point
 		for (int i = 0; i < DIMENSION; i++)
@@ -33,15 +32,13 @@ public class MineField extends Model
 				field[i][j] = new Point(i, j);
 				double random = Math.random();
 				
-				// Consider making formula for random
-				if (mines >= 1 && random < 0.07)						// 0.07: number low enough to spread out mines but high enough so that all mines are places
+				if (mines >= 1 && random < 0.075)						// 0.07: number low enough to spread out mines but high enough so that all mines are places
 				{
 					field[i][j].setMine(true);
 					mines--;
 				}
 			}
 		}
-		System.out.println("Mines leftover: " + mines);
 		
 		// The first and last Points are always not mines
 		field[0][0].setMine(false);
@@ -109,29 +106,43 @@ public class MineField extends Model
 		// Check each neighbor to see if it is a mine; count the number of neighboring mines
 		for (Point n : neighbors)
 		{
-			if (n.isMine())
-			{
-				count++;
-			}
+			if (n.isMine()) { count++; }
 		}
 		
 		return count;
 	}
 	
-	// Test code
-	public static void main(String[] args)
+
+	/**
+	 * A move command was called and uses this function to input the new location.
+	 * If the new location is within bounds of the MineField, update the location and fire a property change.
+	 * Otherwise, do nothing.
+	 * @param p: the new location the player is attempting to move to
+	 */
+	public void change(Point p, boolean startup)
 	{
-		MineField m = new MineField();
-		for (int i = 0; i < DIMENSION - 1; i++)
+		if (startup)
 		{
-			for (int j = 0; j < DIMENSION - 1; j++)
+			// Force the system to call propertyChange on startup to draw the MineField
+			Point old = location;
+			this.setLocation(p);
+			firePropertyChange("location", old, location);
+			this.setLocation(old);
+		} else {
+			int i = p.getRow();
+			int j = p.getColumn();
+			
+			// Set location to the new Point if it's within the bounds of the MineField
+			if ( (i >= 0 && i < DIMENSION) && (j >= 0 && j < DIMENSION) )
 			{
-				int a = 0;
-				if (m.getField()[i][j].isMine()) { a = 1; }
-				System.out.print(a + " ");
+				Point old = location;
+				this.setLocation(p);
+				firePropertyChange("location", old, location);
+				changed();
+				
+				// Add the new location to the path of points visited.
+				path.add(location);
 			}
-			System.out.println();
 		}
-		System.out.println("Neighbors with mines: " + m.getMineNeighbors());
 	}
 }
