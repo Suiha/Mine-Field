@@ -1,8 +1,55 @@
 package minefield;
 
-import mvc.*;
+import mvc.Command;
+import tools.Utilities;
 
-public class MoveCommand extends Command
-{
+public class MoveCommand extends Command {
+private String location;
+	public MoveCommand(MineField model, String location) {
+		super(model);
+		this.location = location;
+		
+	}
 
+	@Override
+	public void execute() throws Exception {
+		MineField m = (MineField)this.model;
+		Point tmp = m.getLocation();
+		int i = tmp.getRow();
+		int j = tmp.getColumn();
+		Point next = null;
+		Point[][] field = m.getField();
+		try {
+		if(this.location.equals("NW")) {
+			next = field[i-1][j-1];
+		}
+		if(this.location.equals("N")) {
+			next = field[i-1][j];
+		}
+		if(this.location.equals("NE")) {
+			next = field[i-1][j+1];
+		}
+		if(this.location.equals("E")) {
+			next = field[i][j+1];
+		}
+		if(this.location.equals("W")) {
+			next = field[i][j-1];
+		}
+		if(this.location.equals("SW")) {
+			next = field[i+1][j-1];
+		}
+		if(this.location.equals("SE")) {
+			next = field[i+1][j+1];
+		}
+		if(this.location.equals("S")) {
+			next = field[i+1][j];
+			
+		}
+		m.change(next , false);
+			
+		} catch(Exception e) {
+			Utilities.error(e.toString());
+		}
+	
+	}
 }
