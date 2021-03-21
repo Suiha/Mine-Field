@@ -1,12 +1,12 @@
 package minefield;
 
 import mvc.*;
-import tools.Utilities;
+import tools.*;
 import java.util.*;
 import java.awt.*;
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 
-import javax.swing.*;
 
 public class MineFieldView extends View 
 {
@@ -41,25 +41,24 @@ public class MineFieldView extends View
 			{
 				Point current = field[row][col];
 				cells[row][col] = new JLabel();
-				cells[row][col].setText("?");
-				cells[row][col].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				
-				// If player has visited this Point
-				if (path.contains(current))
+				if (!path.contains(current))
 				{
+					cells[row][col].setText("?");
+					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				} 
+				else if (path.contains(current) && !current.isMine())
+				{
+					// If player has visited this Point
 					cells[row][col].setText("" + m.getMineNeighbors());
-					// If the player is currently at this Point
-					if (current.equals(location)) 
-					{
-						cells[row][col].setBorder(BorderFactory.createLineBorder(Color.WHITE));
-					}
+					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.WHITE));
 				}
-				
-				// If the player has stepped onto a mine
-				if (path.contains(current) && current.isMine())
+				else
 				{
-					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.RED));
+					// If the player has stepped onto a mine
+					// if (path.contains(current) && current.isMine())
 					cells[row][col].setText("!");
+					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.RED));
 					Utilities.inform("Uh oh! You've set off a mine!"
 							+ "\nPlease try again. Go to File > New to start a new game.");
 				}
@@ -67,13 +66,13 @@ public class MineFieldView extends View
 				this.add(cells[row][col]);
 			}
 		}
+		
+		cells[dim - 1][dim - 1].setBorder(BorderFactory.createLineBorder(Color.GREEN));
 		// If the player has reached the goal
 		if (path.contains(goal))
 		{
-			cells[dim - 1][dim - 1].setBorder(BorderFactory.createLineBorder(Color.GREEN));
 			Utilities.inform("Congratulations! You've won!"
 					+ "\nGo to File > New to start a new game.");
 		}
     }
 }
-
