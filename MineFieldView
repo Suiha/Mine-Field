@@ -7,11 +7,8 @@ import java.awt.*;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 
-
 public class MineFieldView extends View 
 {
-	private JLabel[][] cells;
-	
 	public MineFieldView(MineField m)
 	{
 		super(m);
@@ -20,11 +17,11 @@ public class MineFieldView extends View
 	}
 
 	@Override
-    	public void propertyChange(PropertyChangeEvent arg0) 
+	public void propertyChange(PropertyChangeEvent arg0) 
 	{
 		MineField m = (MineField) model;
 		int dim = m.getDim();
-		cells = new JLabel[dim][dim];
+		JLabel[][] cells = m.getCells();
 		setLayout(new GridLayout(dim, dim));
 		
 		Point[][] field = m.getField();
@@ -40,7 +37,6 @@ public class MineFieldView extends View
 			for (int col = 0; col < dim; col++)
 			{
 				Point current = field[row][col];
-				cells[row][col] = new JLabel();
 				
 				if (!path.contains(current))
 				{
@@ -50,13 +46,12 @@ public class MineFieldView extends View
 				else if (path.contains(current) && !current.isMine())
 				{
 					// If player has visited this Point
-					cells[row][col].setText("" + m.getMineNeighbors());
+					cells[row][col].setText("" + m.getMineNeighbors(current));
 					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.WHITE));
 				}
-				else
+				else if (path.contains(location) && location.isMine())
 				{
 					// If the player has stepped onto a mine
-					// if (path.contains(current) && current.isMine())
 					cells[row][col].setText("!");
 					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.RED));
 					Utilities.inform("Uh oh! You've set off a mine!"
