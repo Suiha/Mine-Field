@@ -66,9 +66,10 @@ public class MineField extends Model
 	 */
 	public int getMineNeighbors()
 	{
+		Point current = this.getLocation();
 		int count = 0;
-		int i = location.getRow();
-		int j = location.getColumn();
+		int i = current.getRow();
+		int j = current.getColumn();
 		
 		// Calculating coordinates around the current location
 		int up 		= i - 1;
@@ -137,11 +138,12 @@ public class MineField extends Model
 			{
 				Point old = location;
 				this.setLocation(p);
-				firePropertyChange("location", old, location);
-				changed();
 				
 				// Add the new location to the path of points visited.
 				path.add(location);
+				
+				firePropertyChange("location", old, location);
+				changed();
 			}
 		}
 	}
