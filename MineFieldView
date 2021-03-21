@@ -1,6 +1,7 @@
 package minefield;
 
 import mvc.*;
+import tools.Utilities;
 import java.util.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -29,43 +30,49 @@ public class MineFieldView extends View
 		Point[][] field = m.getField();
 		ArrayList<Point> path = m.getPath();
 		
+		// Where the player currently is and the end goal
+		Point location = m.getLocation();
+		Point goal = field[dim - 1][dim - 1];
+		
+		// Draw the grid of the MineField
 		for (int row = 0; row < dim; row++)
 		{
 			for (int col = 0; col < dim; col++)
 			{
+				Point current = field[row][col];
 				cells[row][col] = new JLabel();
 				cells[row][col].setText("?");
-				//cells[row][col].patch = m.getPatch(row, col);
 				cells[row][col].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				
 				// If player has visited this Point
-				if (path.contains(field[row][col]))
+				if (path.contains(current))
 				{
-					cells[row][col].setBackground(Color.RED);
-					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.WHITE));
 					cells[row][col].setText("" + m.getMineNeighbors());
+					// If the player is currently at this Point
+					if (current.equals(location)) 
+					{
+						cells[row][col].setBorder(BorderFactory.createLineBorder(Color.WHITE));
+					}
 				}
 				
-				// If the player set off a mine
-				if (path.contains(field[row][col]) && field[row][col].isMine())
+				// If the player has stepped onto a mine
+				if (path.contains(current) && current.isMine())
 				{
 					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.RED));
 					cells[row][col].setText("!");
 					Utilities.inform("Uh oh! You've set off a mine!"
-							+ "\n Please try again. Go to File > New to start a new game.");
-				}
-				
-				// If the player has reached the goal
-				if (path.contains(field[dim - 1][dim - 1]))
-				{
-					cells[row][col].setBackground(Color.WHITE);
-					cells[row][col].setBorder(BorderFactory.createLineBorder(Color.GREEN));
-					Utilities.inform("Congratulations! You've won!"
-							+ "\nGo to File > New to start a new game.");
+							+ "\nPlease try again. Go to File > New to start a new game.");
 				}
 				
 				this.add(cells[row][col]);
 			}
+		}
+		// If the player has reached the goal
+		if (path.contains(goal))
+		{
+			cells[dim - 1][dim - 1].setBorder(BorderFactory.createLineBorder(Color.GREEN));
+			Utilities.inform("Congratulations! You've won!"
+					+ "\nGo to File > New to start a new game.");
 		}
     }
 }
