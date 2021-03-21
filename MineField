@@ -14,6 +14,8 @@ public class MineField extends Model
 	private Point location;
 	private ArrayList<Point> path;
 	
+	private JLabel[][] cells;
+	
 	public MineField()
 	{
 		super();
@@ -32,7 +34,7 @@ public class MineField extends Model
 				field[i][j] = new Point(i, j);
 				double random = Math.random();
 				
-				if (mines >= 1 && random < 0.075)						// 0.07: number low enough to spread out mines but high enough so that all mines are places
+				if (mines >= 1 && random < 0.07)
 				{
 					field[i][j].setMine(true);
 					mines--;
@@ -48,11 +50,23 @@ public class MineField extends Model
 		path = new ArrayList<>();
 		location = field[0][0];
 		path.add(location);
+		
+		// Initialize the JLabel grid
+		cells = new JLabel[DIMENSION][DIMENSION];
+		for (int row = 0; row < DIMENSION; row++)
+		{
+			for (int col = 0; col < DIMENSION; col++)
+			{
+				cells[row][col] = new JLabel();
+			}
+		}
 	}
 	
 	public int getDim() 				{ return DIMENSION; }
 	
 	public Point[][] getField() 		{ return field; }
+	
+	public JLabel[][] getCells()		{ return cells; }
 	
 	public Point getLocation() 			{ return location; }
 	public void setLocation(Point p) 	{ location = p; }
@@ -64,9 +78,8 @@ public class MineField extends Model
 	 * Calculates how many Points with mines are immediately next to the current location.
 	 * @return: number of Points around the current location with mines
 	 */
-	public int getMineNeighbors()
+	public int getMineNeighbors(Point current)
 	{
-		Point current = this.getLocation();
 		int count = 0;
 		int i = current.getRow();
 		int j = current.getColumn();
@@ -116,6 +129,7 @@ public class MineField extends Model
 
 	/**
 	 * A move command was called and uses this function to input the new location.
+	 * If this function has been called when the program first starts, force the system to draw the grid.
 	 * If the new location is within bounds of the MineField, update the location and fire a property change.
 	 * Otherwise, do nothing.
 	 * @param p: the new location the player is attempting to move to
