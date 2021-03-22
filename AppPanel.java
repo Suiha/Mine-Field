@@ -104,7 +104,7 @@ public class AppPanel extends JPanel implements ActionListener
 			} else if (cmmd == "Help") {
 				Utilities.inform(factory.getHelp());
 			} else {
-				Command c = factory.makeEditCommand(model, cmmd, ae.getSource());
+				Command c = factory.makeEditCommand(model, cmmd);
 				c.execute();
 			}
 		} catch (Exception e) {
