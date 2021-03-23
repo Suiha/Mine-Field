@@ -3,19 +3,19 @@ package minefield;
 import mvc.*;
 
 public class MineFieldFactory implements AppFactory {
-	@Override
+	
 	public Model makeModel() {
 		return new MineField();
 	}
-	@Override
+	
 	public View makeView(Model model) {
 		return new MineFieldView((MineField)model);
 	}
-	@Override
+	
 	public String[] getEditCommands() {
 		return new String[] {"NW", "N", "NE", "W", "E","SW","S", "SE" };
 	}
-	@Override
+	
 	public Command makeEditCommand(Model model, String type) {
 		MineField m = (MineField)model; 
 		if (type == "NW") {
@@ -45,18 +45,18 @@ public class MineFieldFactory implements AppFactory {
 		return null;
 	}
 
-	@Override
+	
 	public String getTitle() {
 		
 		return "Mine Field Team 9, 2021";
 	}
 
-	@Override
+	
 	public String about() {
 		return "Mine Field Version 2.0. Copyright by Team 9 (Veronica Hu, Matthew Maksim).";
 	}
 
-	@Override
+	
 	public String[] getHelp() {
 		
 		return new String[]{"Navigate to the exit (in the bottom right) while avoiding mines"};
