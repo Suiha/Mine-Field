@@ -1,6 +1,8 @@
 package minefield;
 
 import mvc.*;
+import tools.Utilities;
+
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
@@ -72,6 +74,7 @@ public class MineField extends Model
 	public void setLocation(Point p) 	{ location = p; }
 	
 	public ArrayList<Point> getPath() 	{ return path; }
+	public void clearPath()				{ path = new ArrayList<Point>(); }
 	
 	
 	/**
@@ -130,7 +133,8 @@ public class MineField extends Model
 	/**
 	 * A move command was called and uses this function to input the new location.
 	 * If this function has been called when the program first starts, force the system to draw the grid.
-	 * If the new location is within bounds of the MineField, update the location and fire a property change.
+	 * If the new location is within bounds of the MineField, 
+	 * and the player hasn't reached the end yet, update the location and fire a property change.
 	 * Otherwise, do nothing.
 	 * @param p: the new location the player is attempting to move to
 	 */
@@ -139,11 +143,11 @@ public class MineField extends Model
 		if (startup)
 		{
 			// Force the system to call propertyChange on startup to draw the MineField
-			Point old = location;
-			this.setLocation(p);
-			firePropertyChange("location", old, location);
-			this.setLocation(old);
-		} else {
+			changed();
+		} 
+		else if (!path.contains(this.field[DIMENSION - 1][DIMENSION - 1]))
+		{
+			// If the player has not reached the goal yet, they can move
 			int i = p.getRow();
 			int j = p.getColumn();
 			
@@ -157,7 +161,6 @@ public class MineField extends Model
 				path.add(location);
 				
 				firePropertyChange("location", old, location);
-				changed();
 			}
 		}
 	}
