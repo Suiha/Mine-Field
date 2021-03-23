@@ -7,7 +7,7 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 
-public class MineField extends Model 
+public class MineField extends Model
 {
 	public static int DIMENSION = 20;
 	public static int percentMined = 5;
@@ -26,7 +26,7 @@ public class MineField extends Model
 		field = new Point[DIMENSION][DIMENSION];						// Create a field of Points to keep track of which locations are mines
 		double mines = DIMENSION * DIMENSION;							// Calculate how many Points there are on the field
 		mines /= 100;
-		mines *= percentMined;									// Calculate how many total mines there are on the map based on percentMined
+		mines *= percentMined;											// Calculate how many total mines there are on the map based on percentMined
 		
 		// Randomly determining the placement of mines and initializing each Point
 		for (int i = 0; i < DIMENSION; i++)
@@ -64,13 +64,13 @@ public class MineField extends Model
 		}
 	}
 	
-	public int getDim() 			{ return DIMENSION; }
+	public int getDim() 				{ return DIMENSION; }
 	
 	public Point[][] getField() 		{ return field; }
 	
 	public JLabel[][] getCells()		{ return cells; }
 	
-	public Point getLocation() 		{ return location; }
+	public Point getLocation() 			{ return location; }
 	public void setLocation(Point p) 	{ location = p; }
 	
 	public ArrayList<Point> getPath() 	{ return path; }
@@ -139,19 +139,32 @@ public class MineField extends Model
 	 */
 	public void change(Point p, boolean startup)
 	{
+		boolean loss = false;
 		if (startup)
 		{
 			// Force the system to call propertyChange on startup to draw the MineField
-			changed();
-		} 
+			Point old = location;
+			this.setLocation(p);
+			firePropertyChange("location", old, location);
+			this.setLocation(old);
+		}
 		else if (!path.contains(this.field[DIMENSION - 1][DIMENSION - 1]))
 		{
+			for (Point point : path)
+			{
+				if (point.isMine())
+				{
+					loss = true;
+					break;
+				}
+			}
+			
 			// If the player has not reached the goal yet, they can move
 			int i = p.getRow();
 			int j = p.getColumn();
 			
 			// Set location to the new Point if it's within the bounds of the MineField
-			if ( (i >= 0 && i < DIMENSION) && (j >= 0 && j < DIMENSION) )
+			if ( (i >= 0 && i < DIMENSION) && (j >= 0 && j < DIMENSION) && !loss)
 			{
 				Point old = location;
 				this.setLocation(p);
@@ -160,6 +173,7 @@ public class MineField extends Model
 				path.add(location);
 				
 				firePropertyChange("location", old, location);
+				changed();
 			}
 		}
 	}
