@@ -70,5 +70,13 @@ public class MineFieldView extends View
 			Utilities.inform("Congratulations! You've won!"
 					+ "\nGo to File > New to start a new game.");
 		}
+	@Override
+		public void setModel(Model m) {
+			this.model.removePropertyChangeListener(this);
+        		this.model = m;
+        		this.model.initSupport();
+        		this.model.addPropertyChangeListener(this);
+        		((MineField)model).change(new Point(10, 10), true);
+	}
     }
 }
