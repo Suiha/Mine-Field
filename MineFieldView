@@ -30,7 +30,7 @@ public class MineFieldView extends View
 		// Where the player currently is and the end goal
 		Point location = m.getLocation();
 		Point goal = field[dim - 1][dim - 1];
-		
+		this.removeAll();
 		// Draw the grid of the MineField
 		for (int row = 0; row < dim; row++)
 		{
@@ -63,6 +63,7 @@ public class MineFieldView extends View
 		}
 		
 		cells[dim - 1][dim - 1].setBorder(BorderFactory.createLineBorder(Color.GREEN));
+		repaint();
 		// If the player has reached the goal
 		if (path.contains(goal))
 		{
