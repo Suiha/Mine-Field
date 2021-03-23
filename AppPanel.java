@@ -90,14 +90,29 @@ public class AppPanel extends JPanel implements ActionListener
 				os.close();
 				model.setUnsavedChanges(false);
 			} else if (cmmd == "Open") {
-				String fName = Utilities.getFileName(null, true);
-				ObjectInputStream is = new ObjectInputStream(new FileInputStream(fName));
-				//model.removePropertyChangeListener(this);
-				model = (Model)is.readObject();
-				//this.model.initSupport();
-				//model.addPropertyChangeListener(this);
-				view.setModel(model);
-				is.close();
+				if (!model.getUnsavedChanges())
+				{
+					String fName = Utilities.getFileName(null, true);
+					ObjectInputStream is = new ObjectInputStream(new FileInputStream(fName));
+					model = (Model)is.readObject();
+					view.setModel(model);
+					is.close();
+				} else {
+					boolean save = Utilities.confirm("There are unsaved changes. Do you want to save?");
+					if (save)
+					{
+						String fName = Utilities.getFileName(null, true);
+						ObjectInputStream is = new ObjectInputStream(new FileInputStream(fName));
+						model = (Model)is.readObject();
+						view.setModel(model);
+					} else {
+						String fName = Utilities.getFileName(null, false);
+						ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fName));
+						os.writeObject(model);
+						os.close();
+						model.setUnsavedChanges(false);
+					}
+				}
 			} else if (cmmd == "New") {
 				if (!model.getUnsavedChanges())
 				{
@@ -118,8 +133,23 @@ public class AppPanel extends JPanel implements ActionListener
 					}
 				}
 			} else if (cmmd == "Quit") {
-				//	Utilities.saveChanges(model);
-				System.exit(1);
+				if (!model.getUnsavedChanges())
+				{
+					System.exit(1);
+				} else {
+					boolean save = Utilities.confirm("There are unsaved changes. Do you want to save?");
+					if (save)
+					{
+						System.exit(1);
+					} else {
+						String fName = Utilities.getFileName(null, false);
+						ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fName));
+						os.writeObject(model);
+						os.close();
+						model.setUnsavedChanges(false);
+					}
+				}
+				
 			} else if (cmmd == "About") {
 				Utilities.inform(factory.about());
 			} else if (cmmd == "Help") {
