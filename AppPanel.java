@@ -82,8 +82,13 @@ public class AppPanel extends JPanel implements ActionListener
 				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fName));
 				os.writeObject(model);
 				os.close();
+				model.setUnsavedChanges(false);
 			} else if (cmmd == "SaveAs") {
-				//Utilities.save(model, true);
+				String fName = Utilities.getFileName(null, false);
+				ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fName));
+				os.writeObject(model);
+				os.close();
+				model.setUnsavedChanges(false);
 			} else if (cmmd == "Open") {
 				String fName = Utilities.getFileName(null, true);
 				ObjectInputStream is = new ObjectInputStream(new FileInputStream(fName));
@@ -94,8 +99,24 @@ public class AppPanel extends JPanel implements ActionListener
 				view.setModel(model);
 				is.close();
 			} else if (cmmd == "New") {
-				model = factory.makeModel();
-				view.setModel(model);
+				if (!model.getUnsavedChanges())
+				{
+					model = factory.makeModel();
+					view.setModel(model);
+				} else {
+					boolean save = Utilities.confirm("There are unsaved changes. Do you want to save?");
+					if (save)
+					{
+						model = factory.makeModel();
+						view.setModel(model);
+					} else {
+						String fName = Utilities.getFileName(null, false);
+						ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fName));
+						os.writeObject(model);
+						os.close();
+						model.setUnsavedChanges(false);
+					}
+				}
 			} else if (cmmd == "Quit") {
 				//	Utilities.saveChanges(model);
 				System.exit(1);
