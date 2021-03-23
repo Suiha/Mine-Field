@@ -13,7 +13,7 @@ public class MineFieldPanel extends AppPanel
         add(view);
     	
         controlPanel.setBackground(Color.lightGray);
-        view.setBackground(Color.WHITE);
+        view.setBackground(Color.lightGray);
         
         JButton NW = new JButton("NW");
         NW.addActionListener(this);
